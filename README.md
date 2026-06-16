@@ -69,12 +69,12 @@ Open <http://localhost:3000>, hit `ENTER CONSOLE`, and pretend you're in a serve
 
 ```mermaid
 flowchart LR
-    A[/ landing] --> B[(console) layout / Shell]
-    B --> C[9 console pages]
-    C --> D[canvas viz components]
-    D --> E[useCanvasLoop.ts]
-    E -->|offscreen| F[pause - IntersectionObserver]
-    E -->|hidden tab| G[pause - Page Visibility]
+    A["/ landing"] --> B["(console) layout / Shell"]
+    B --> C["9 console pages"]
+    C --> D["canvas viz components"]
+    D --> E["useCanvasLoop.ts"]
+    E -->|offscreen| F["pause - IntersectionObserver"]
+    E -->|hidden tab| G["pause - Page Visibility"]
 ```
 
 | layer | path | job |
