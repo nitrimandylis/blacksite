@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#050505"/>
+  <rect x="8" y="8" width="6" height="6" fill="#fff"/>
+  <rect x="8" y="8" width="6" height="6" fill="#fff" opacity="0.8"/>
+  <rect x="4" y="4" width="2" height="2" fill="#fff" opacity="0.3"/>
+  <rect x="26" y="26" width="2" height="2" fill="#fff" opacity="0.3"/>
+  <text x="16" y="24" font-family="monospace" font-size="10" fill="#fff" text-anchor="middle" letter-spacing="1">BS</text>
+</svg>

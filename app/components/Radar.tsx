@@ -159,7 +159,12 @@ export default function Radar({ height = 460 }: { height?: number }) {
 
   return (
     <div style={{ position: "relative" }}>
-      <canvas ref={ref} style={{ width: "100%", height: h, display: "block" }} />
+      <canvas
+        ref={ref}
+        role="img"
+        aria-label="360-degree threat radar sweep with simulated contacts. All data fabricated."
+        style={{ width: "100%", height: h, display: "block" }}
+      />
       <div
         style={{
           position: "absolute",

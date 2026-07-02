@@ -13,29 +13,22 @@ const STAGES = [
   { name: "Actions / Exfil", desc: "domain owned · 8.4GB staged for pull" },
 ];
 
-export default function KillChain() {
-  // progress in [0, STAGES.length]; fractional part = active stage fill
-  const [p, setP] = useState(0);
+export default function KillChain({ phase = 0 }: { phase?: number }) {
+  const [fill, setFill] = useState(0);
 
   useEffect(() => {
+    setFill(0);
     const t = setInterval(() => {
-      setP((v) => {
-        const nv = v + 0.012;
-        return nv >= STAGES.length + 1 ? 0 : nv;
-      });
+      setFill(f => f >= 92 ? 92 : f + 0.4);
     }, 60);
     return () => clearInterval(t);
-  }, []);
-
-  const activeIdx = Math.floor(p);
-  const frac = p - activeIdx;
+  }, [phase]);
 
   return (
     <div className={c.chain}>
       {STAGES.map((s, i) => {
-        const state =
-          i < activeIdx ? c.done : i === activeIdx ? c.active : "";
-        const fill = i < activeIdx ? 100 : i === activeIdx ? Math.round(frac * 100) : 0;
+        const state = i < phase ? c.done : i === phase ? c.active : "";
+        const pct = i < phase ? 100 : i === phase ? Math.round(fill) : 0;
         return (
           <div key={s.name} className={`${c.stage} ${state}`}>
             <div className={c.rail}>
@@ -46,14 +39,14 @@ export default function KillChain() {
               <div className={c.idx}>STAGE {String(i + 1).padStart(2, "0")}</div>
               <div className={c.name}>{s.name}</div>
               <div className={c.desc}>{s.desc}</div>
-              {i === activeIdx && (
+              {i === phase && (
                 <div className={c.bar}>
-                  <span className={c.barFill} style={{ width: `${fill}%` }} />
+                  <span className={c.barFill} style={{ transform: `scaleX(${pct / 100})` }} />
                 </div>
               )}
             </div>
             <div className={c.status}>
-              {i < activeIdx ? "complete" : i === activeIdx ? "running" : "pending"}
+              {i < phase ? "complete" : i === phase ? "running" : "pending"}
             </div>
           </div>
         );

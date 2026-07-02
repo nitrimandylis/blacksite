@@ -1,7 +1,13 @@
+"use client";
+
 import Decrypt from "../../components/Decrypt";
+import { useSim } from "../../sim/context";
 import s from "../console.module.css";
 
 export default function DecryptPage() {
+  const { hosts, dataExfil } = useSim();
+  const owned = hosts.filter(h => h.status === "OWNED").length;
+
   return (
     <>
       <div className={s.pageHead}>
@@ -23,7 +29,7 @@ export default function DecryptPage() {
         <div className={s.card} style={{ padding: 0 }}>
           <div className={s.panelHead}>
             <span className={s.panelTitle}>Rig Status</span>
-            <span className={s.panelMeta}>8× accelerator</span>
+            <span className={s.panelMeta}>8&times; accelerator</span>
           </div>
           <div className={s.panelBody}>
             {[
@@ -32,6 +38,8 @@ export default function DecryptPage() {
               ["candidates", "1.4e12"],
               ["algo", "AES-256-GCM"],
               ["mode", "mask + dict"],
+              ["hosts owned", String(owned)],
+              ["exfil total", `${dataExfil.toFixed(1)} GB`],
             ].map(([k, v]) => (
               <div
                 key={k}

@@ -1,14 +1,21 @@
+"use client";
+
 import AttackMap from "../../components/AttackMap";
+import { useSim } from "../../sim/context";
 import s from "../console.module.css";
 
 const ORIGINS = [
-  { name: "us-east", note: "primary egress · 142 strikes/h", tag: "ACTIVE", hot: true },
-  { name: "ldn", note: "relay node · low noise", tag: "RELAY", hot: false },
-  { name: "tok", note: "staging · payload mirror", tag: "STAGE", hot: false },
-  { name: "syd", note: "decoy traffic generator", tag: "DECOY", hot: false },
+  { name: "us-east", note: "primary egress", tag: "ACTIVE", hot: true },
+  { name: "ldn", note: "relay node", tag: "RELAY", hot: false },
+  { name: "tok", note: "staging", tag: "STAGE", hot: false },
+  { name: "syd", note: "decoy traffic", tag: "DECOY", hot: false },
 ];
 
 export default function MapPage() {
+  const { events, hosts } = useSim();
+  const strikes = events.filter(e => e.hot).length;
+  const owned = hosts.filter(h => h.status === "OWNED").length;
+
   return (
     <>
       <div className={s.pageHead}>
@@ -19,14 +26,14 @@ export default function MapPage() {
             arc is a strike in flight; rings mark impact. All traffic fabricated.
           </p>
         </div>
-        <div className={s.pageTag}>8 NODES // LIVE FEED</div>
+        <div className={s.pageTag}>{owned} OWNED // {strikes} STRIKES</div>
       </div>
 
       <div className={`${s.grid} ${s.cols3}`}>
         <div className={`${s.card} ${s.span2}`} style={{ padding: 0 }}>
           <div className={s.panelHead}>
             <span className={s.panelTitle}>Operations Theatre</span>
-            <span className={s.panelMeta}>equirectangular · live</span>
+            <span className={s.panelMeta}>equirectangular &middot; live</span>
           </div>
           <div style={{ padding: 8 }}>
             <AttackMap height={460} />

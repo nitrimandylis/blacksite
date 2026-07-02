@@ -22,10 +22,12 @@ const PLANETS: Planet[] = [
   { label: "iot-belt", orbit: 305, size: 3, speed: 0.12, phase: 0.7, status: "RECON", moons: 0 },
 ];
 
-export default function SolarMap({ height = 560 }: { height?: number }) {
+export default function SolarMap({ height = 560, statusMap = {} }: { height?: number; statusMap?: Record<string, string> }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const [sel, setSel] = useState<Planet | null>(null);
   const posRef = useRef<{ x: number; y: number; p: Planet }[]>([]);
+  const statusRef = useRef(statusMap);
+  statusRef.current = statusMap;
   const [h, setH] = useState(height);
 
   useEffect(() => {
@@ -108,8 +110,9 @@ export default function SolarMap({ height = 560 }: { height?: number }) {
         // planet
         ctx.beginPath();
         ctx.arc(x, y, p.size + (isHov ? 2 : 0), 0, Math.PI * 2);
+        const liveStatus = statusRef.current[p.label] || p.status;
         ctx.fillStyle =
-          p.status === "OWNED" ? "#ffffff" : "#0c0c0c";
+          liveStatus === "OWNED" ? "#ffffff" : "#0c0c0c";
         ctx.fill();
         ctx.strokeStyle = isHov ? "#ffffff" : "rgba(255,255,255,0.6)";
         ctx.lineWidth = isHov ? 1.6 : 1;
@@ -163,7 +166,12 @@ export default function SolarMap({ height = 560 }: { height?: number }) {
 
   return (
     <div style={{ position: "relative" }}>
-      <canvas ref={ref} style={{ width: "100%", height: h, display: "block" }} />
+      <canvas
+        ref={ref}
+        role="img"
+        aria-label="Orbital map of simulated targets circling a central command node. All data fabricated."
+        style={{ width: "100%", height: h, display: "block" }}
+      />
       <div
         style={{
           position: "absolute",

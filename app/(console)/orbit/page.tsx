@@ -1,16 +1,40 @@
+"use client";
+
 import SolarMap from "../../components/SolarMap";
+import { useSim } from "../../sim/context";
 import s from "../console.module.css";
 
-const BODIES = [
-  { name: "edge-fw", au: "0.4", note: "perimeter breach point", tag: "OWNED", hot: true },
-  { name: "dc-cluster", au: "0.7", note: "domain authority · 2 sats", tag: "OWNED", hot: true },
-  { name: "sql-vault", au: "1.1", note: "enumerating schemas", tag: "ENUM", hot: false },
-  { name: "vpn-edge", au: "1.6", note: "handshake captured", tag: "PROBE", hot: false },
-  { name: "bak-grid", au: "2.0", note: "primary objective · 3 sats", tag: "TARGET", hot: false },
-  { name: "iot-belt", au: "2.4", note: "fingerprinting devices", tag: "RECON", hot: false },
-];
+const PLANET_HOST_MAP: Record<string, string> = {
+  "edge-fw": "edge-fw-01",
+  "dc-cluster": "win-dc-02",
+  "sql-vault": "sql-07",
+  "vpn-edge": "vpn-gw",
+  "bak-grid": "bak-vault",
+  "iot-belt": "iot-hub",
+};
 
 export default function OrbitPage() {
+  const { hosts } = useSim();
+
+  const statusMap: Record<string, string> = {};
+  for (const [planet, hostId] of Object.entries(PLANET_HOST_MAP)) {
+    const h = hosts.find(x => x.id === hostId);
+    if (h) statusMap[planet] = h.status;
+  }
+
+  const bodies = [
+    { name: "edge-fw", au: "0.4", note: "perimeter breach point" },
+    { name: "dc-cluster", au: "0.7", note: "domain authority" },
+    { name: "sql-vault", au: "1.1", note: "enumerating schemas" },
+    { name: "vpn-edge", au: "1.6", note: "handshake captured" },
+    { name: "bak-grid", au: "2.0", note: "primary objective" },
+    { name: "iot-belt", au: "2.4", note: "fingerprinting devices" },
+  ].map(b => ({
+    ...b,
+    status: statusMap[b.name] || "QUEUED",
+    hot: statusMap[b.name] === "OWNED",
+  }));
+
   return (
     <>
       <div className={s.pageHead}>
@@ -19,20 +43,20 @@ export default function OrbitPage() {
           <p className={s.pageDesc}>
             Engagement modeled as a solar system. The C2 core anchors the
             field; each body is a subsystem orbiting at a distance scaled to
-            access difficulty. Satellites are dependent services.
+            access difficulty.
           </p>
         </div>
-        <div className={s.pageTag}>6 BODIES // 6 SATELLITES</div>
+        <div className={s.pageTag}>{bodies.length} BODIES // {bodies.filter(b => b.hot).length} OWNED</div>
       </div>
 
       <div className={`${s.grid} ${s.cols3}`}>
         <div className={`${s.card} ${s.span2}`} style={{ padding: 0 }}>
           <div className={s.panelHead}>
             <span className={s.panelTitle}>Orbital View</span>
-            <span className={s.panelMeta}>heliocentric · live</span>
+            <span className={s.panelMeta}>heliocentric &middot; live</span>
           </div>
           <div style={{ padding: 8 }}>
-            <SolarMap height={560} />
+            <SolarMap height={560} statusMap={statusMap} />
           </div>
         </div>
 
@@ -43,7 +67,7 @@ export default function OrbitPage() {
           </div>
           <div className={s.panelBody}>
             <ul className={s.list}>
-              {BODIES.map((b, i) => (
+              {bodies.map((b) => (
                 <li key={b.name} className={s.listRow}>
                   <span className={s.listIdx}>{b.au}</span>
                   <span>
@@ -52,7 +76,7 @@ export default function OrbitPage() {
                     <span className={s.listSub}>{b.note}</span>
                   </span>
                   <span className={`${s.tag} ${b.hot ? s.tagHot : ""}`}>
-                    {b.tag}
+                    {b.status}
                   </span>
                 </li>
               ))}

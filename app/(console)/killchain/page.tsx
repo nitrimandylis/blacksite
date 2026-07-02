@@ -1,23 +1,28 @@
+"use client";
+
 import KillChain from "../../components/KillChain";
+import { useSim } from "../../sim/context";
 import s from "../console.module.css";
 
 export default function KillChainPage() {
+  const { killPhase } = useSim();
+
   return (
     <>
       <div className={s.pageHead}>
         <div>
           <h1 className={s.pageTitle}>Kill Chain</h1>
           <p className={s.pageDesc}>
-            Engagement progression through the seven intrusion phases. The
-            pipeline loops continuously for demonstration.
+            Engagement progression through the seven intrusion phases. Advances
+            as targets are compromised across the operation.
           </p>
         </div>
-        <div className={s.pageTag}>7 PHASES // AUTO</div>
+        <div className={s.pageTag}>PHASE {String(killPhase + 1).padStart(2, "0")} // LIVE</div>
       </div>
 
       <div className={`${s.grid} ${s.cols3}`}>
         <div className={`${s.card} ${s.span2}`} style={{ padding: "8px 24px" }}>
-          <KillChain />
+          <KillChain phase={killPhase} />
         </div>
 
         <div className={s.card} style={{ padding: 0 }}>
@@ -29,7 +34,7 @@ export default function KillChainPage() {
             <p style={{ fontSize: 12, color: "var(--ink-dim)", lineHeight: 1.8 }}>
               The intrusion kill chain models an operation as a sequence of
               dependent phases. Breaking any single link disrupts the whole
-              chain — which is exactly why defenders map it.
+              chain &mdash; which is exactly why defenders map it.
             </p>
             <p
               style={{

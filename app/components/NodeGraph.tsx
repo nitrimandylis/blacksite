@@ -64,10 +64,12 @@ function buildGraph(w: number, h: number) {
   return { nodes, edges };
 }
 
-export default function NodeGraph({ height = 520 }: { height?: number }) {
+export default function NodeGraph({ height = 520, statusMap = {}, onSelect }: { height?: number; statusMap?: Record<string, string>; onSelect?: (label: string | null) => void }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const selRef = useRef<number | null>(null);
+  const statusRef = useRef(statusMap);
+  statusRef.current = statusMap;
   const [h, setH] = useState(height);
 
   useEffect(() => {
@@ -192,9 +194,10 @@ export default function NodeGraph({ height = 520 }: { height?: number }) {
         }
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-        if (n.kind === "core") ctx.fillStyle = "#ffffff";
-        else if (n.kind === "owned") ctx.fillStyle = "#e0e0e0";
-        else if (n.kind === "target") ctx.fillStyle = "#0a0a0a";
+        const resolvedKind = statusRef.current[n.label] === "owned" ? "owned" : statusRef.current[n.label] === "target" ? "target" : statusRef.current[n.label] === "host" ? "host" : n.kind;
+        if (resolvedKind === "core") ctx.fillStyle = "#ffffff";
+        else if (resolvedKind === "owned") ctx.fillStyle = "#e0e0e0";
+        else if (resolvedKind === "target") ctx.fillStyle = "#0a0a0a";
         else ctx.fillStyle = "#1a1a1a";
         ctx.fill();
         ctx.strokeStyle =
@@ -226,7 +229,9 @@ export default function NodeGraph({ height = 520 }: { height?: number }) {
       const rect = c!.getBoundingClientRect();
       const i = pick(e.clientX - rect.left, e.clientY - rect.top);
       selRef.current = i;
-      setSelected(i !== null ? nodes[i].label : null);
+      const label = i !== null ? nodes[i].label : null;
+      setSelected(label);
+      onSelect?.(label);
     }
     c.addEventListener("mousemove", onMove);
     c.addEventListener("click", onClick);
@@ -243,7 +248,12 @@ export default function NodeGraph({ height = 520 }: { height?: number }) {
 
   return (
     <div style={{ position: "relative" }}>
-      <canvas ref={ref} style={{ width: "100%", height: h, display: "block" }} />
+      <canvas
+        ref={ref}
+        role="img"
+        aria-label="Force-directed network graph of simulated hosts and links. All data fabricated."
+        style={{ width: "100%", height: h, display: "block" }}
+      />
       <div
         style={{
           position: "absolute",

@@ -79,10 +79,11 @@ export default function Decrypt() {
         <span
           style={{
             position: "absolute",
-            inset: "0 auto 0 0",
-            width: `${pct}%`,
+            inset: 0,
+            transform: `scaleX(${pct / 100})`,
+            transformOrigin: "left",
             background: "var(--ink)",
-            transition: "width 0.1s linear",
+            transition: "transform 0.1s linear",
           }}
         />
       </div>

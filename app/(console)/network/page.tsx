@@ -1,15 +1,27 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
 import NodeGraph from "../../components/NodeGraph";
+import HostDetail from "../../components/HostDetail";
+import { useSim, type Host } from "../../sim/context";
 import s from "../console.module.css";
 
-const HOSTS = [
-  { ip: "14.221.9.40", name: "edge-fw-01", os: "FortiOS 7.2", tag: "OWNED", hot: true },
-  { ip: "10.0.4.12", name: "win-dc-02", os: "Win Srv 2022", tag: "OWNED", hot: true },
-  { ip: "10.0.4.77", name: "sql-07", os: "Win Srv 2019", tag: "TARGET", hot: false },
-  { ip: "10.0.1.1", name: "vpn-gw", os: "OpenVPN", tag: "TARGET", hot: false },
-  { ip: "10.0.9.5", name: "bak-vault", os: "Veeam 12", tag: "TARGET", hot: false },
-];
-
 export default function NetworkPage() {
+  const { hosts } = useSim();
+  const [detail, setDetail] = useState<Host | null>(null);
+
+  const statusMap: Record<string, string> = {};
+  for (const h of hosts) {
+    statusMap[h.id] = h.status === "OWNED" ? "owned" : h.status === "QUEUED" ? "host" : "target";
+  }
+
+  function onNodeSelect(label: string | null) {
+    if (!label) { setDetail(null); return; }
+    const h = hosts.find(x => x.id === label || x.name === label);
+    setDetail(h || null);
+  }
+
   return (
     <>
       <div className={s.pageHead}>
@@ -20,22 +32,19 @@ export default function NetworkPage() {
             Packets flow along compromised routes. Click nodes to inspect.
           </p>
         </div>
-        <div className={s.pageTag}>18 NODES // 22 LINKS</div>
+        <div className={s.pageTag}>{hosts.length} NODES // {hosts.filter(h => h.status === "OWNED").length} OWNED</div>
       </div>
 
       <div className={`${s.grid} ${s.cols3}`}>
-        <div className={`${s.card} ${s.span2}`} style={{ padding: 0 }}>
+        <div className={`${s.card} ${s.span2}`} style={{ padding: 0, position: "relative", overflow: "hidden" }}>
           <div className={s.panelHead}>
             <span className={s.panelTitle}>Topology // sector-14</span>
             <span className={s.panelMeta}>force-directed</span>
           </div>
           <div style={{ padding: 8 }}>
-            <NodeGraph height={520} />
+            <NodeGraph height={520} statusMap={statusMap} onSelect={onNodeSelect} />
           </div>
-          <div
-            className={s.legend}
-            style={{ padding: "0 16px 16px" }}
-          >
+          <div className={s.legend} style={{ padding: "0 16px 16px" }}>
             <span className={s.legendItem}>
               <span className={s.legendSwatch} style={{ background: "#fff" }} />
               c2 core
@@ -53,6 +62,7 @@ export default function NetworkPage() {
               host
             </span>
           </div>
+          {detail && <HostDetail host={detail} onClose={() => setDetail(null)} />}
         </div>
 
         <div className={s.card} style={{ padding: 0 }}>
@@ -62,8 +72,8 @@ export default function NetworkPage() {
           </div>
           <div className={s.panelBody}>
             <ul className={s.list}>
-              {HOSTS.map((h, i) => (
-                <li key={h.ip} className={s.listRow}>
+              {hosts.map((h, i) => (
+                <li key={h.id} className={s.listRow} style={{ cursor: "pointer" }} onClick={() => setDetail(h)}>
                   <span className={s.listIdx}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
@@ -71,11 +81,11 @@ export default function NetworkPage() {
                     <span className={s.listMain}>{h.name}</span>
                     <br />
                     <span className={s.listSub}>
-                      {h.ip} · {h.os}
+                      {h.ip} &middot; {h.os}
                     </span>
                   </span>
-                  <span className={`${s.tag} ${h.hot ? s.tagHot : ""}`}>
-                    {h.tag}
+                  <span className={`${s.tag} ${h.status === "OWNED" ? s.tagHot : ""}`}>
+                    {h.status}
                   </span>
                 </li>
               ))}

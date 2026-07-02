@@ -96,5 +96,12 @@ export default function BigChart({
     return startCanvasLoop(c, draw);
   }, [seed, height, bars]);
 
-  return <canvas ref={ref} style={{ width: "100%", height }} />;
+  return (
+    <canvas
+      ref={ref}
+      role="img"
+      aria-label="Time-series area chart of simulated traffic. All data fabricated."
+      style={{ width: "100%", height }}
+    />
+  );
 }

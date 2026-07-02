@@ -77,5 +77,12 @@ export default function Gauge({
     return startCanvasLoop(c, draw);
   }, [value, label, size]);
 
-  return <canvas ref={ref} style={{ width: size, height: size }} />;
+  return (
+    <canvas
+      ref={ref}
+      role="img"
+      aria-label={`${label} gauge at ${Math.round(value * 100)} percent, simulated`}
+      style={{ width: size, height: size }}
+    />
+  );
 }

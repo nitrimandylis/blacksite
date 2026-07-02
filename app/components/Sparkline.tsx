@@ -72,5 +72,6 @@ export default function Sparkline({
     return startCanvasLoop(c, draw);
   }, [seed, points, height, fill]);
 
-  return <canvas ref={ref} style={{ width: "100%", height }} />;
+  // ponytail: sparklines are decorative accents next to real figures — hidden from AT
+  return <canvas ref={ref} aria-hidden="true" style={{ width: "100%", height }} />;
 }

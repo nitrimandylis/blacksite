@@ -1,21 +1,28 @@
+"use client";
+
 import Radar from "../../components/Radar";
+import { useSim } from "../../sim/context";
 import s from "../console.module.css";
 
-const TRACKS = [
-  { name: "scanner-7", note: "repeated TCP SYN · bearing 042", tag: "HOSTILE", hot: true },
-  { name: "honeypot?", note: "too-open ports · likely trap", tag: "AVOID", hot: true },
-  { name: "c2-peer", note: "friendly implant check-in", tag: "FRIEND", hot: false },
-  { name: "sensor-3", note: "passive · classification pending", tag: "UNKNOWN", hot: false },
-];
-
 export default function RadarPage() {
+  const { events } = useSim();
+  const recentContacts = events
+    .filter(e => ["RECON", "ENUM", "C2", "STEALTH"].includes(e.tag))
+    .slice(0, 4)
+    .map(e => ({
+      name: e.sub.split("::")[0]?.trim() || "unknown",
+      note: e.text,
+      tag: e.tag === "C2" ? "FRIEND" : e.tag === "RECON" ? "HOSTILE" : "UNKNOWN",
+      hot: e.tag === "RECON",
+    }));
+
   return (
     <>
       <div className={s.pageHead}>
         <div>
           <h1 className={s.pageTitle}>Threat Radar</h1>
           <p className={s.pageDesc}>
-            360° sweep of the local segment. Contacts brighten as the beam
+            360&deg; sweep of the local segment. Contacts brighten as the beam
             passes and fade with age. Bearing in degrees, range by ring.
           </p>
         </div>
@@ -36,12 +43,12 @@ export default function RadarPage() {
         <div className={s.card} style={{ padding: 0 }}>
           <div className={s.panelHead}>
             <span className={s.panelTitle}>Track Log</span>
-            <span className={s.panelMeta}>classified</span>
+            <span className={s.panelMeta}>from event feed</span>
           </div>
           <div className={s.panelBody}>
             <ul className={s.list}>
-              {TRACKS.map((tk, i) => (
-                <li key={tk.name} className={s.listRow}>
+              {recentContacts.map((tk, i) => (
+                <li key={i} className={s.listRow}>
                   <span className={s.listIdx}>
                     {String(i + 1).padStart(2, "0")}
                   </span>

@@ -205,7 +205,12 @@ export default function AttackMap({ height = 460 }: { height?: number }) {
 
   return (
     <div style={{ position: "relative" }}>
-      <canvas ref={ref} style={{ width: "100%", height: h, display: "block" }} />
+      <canvas
+        ref={ref}
+        role="img"
+        aria-label="World map with simulated attack arcs between fabricated coordinates."
+        style={{ width: "100%", height: h, display: "block" }}
+      />
       <div
         style={{
           position: "absolute",
