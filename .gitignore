@@ -8,3 +8,7 @@
 .vercel
 *.tsbuildinfo
 next-env.d.ts
+
+# local agent/tooling config
+/.claude
+/.impeccable
