@@ -10,6 +10,7 @@
   --accent: #ffffff;
   --glow: rgba(255, 255, 255, 0.08);
   --mono: "SFMono-Regular", "JetBrains Mono", "Menlo", "Consolas", monospace;
+  --display: var(--font-display), "Arial Narrow", "Impact", sans-serif;
   --radius: 2px;
 }
 
@@ -89,6 +90,12 @@ a {
 ::-webkit-scrollbar-thumb {
   background: var(--line-bright);
   border-radius: 0;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
 }
 
 .mono-label {

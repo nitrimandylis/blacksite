@@ -1,5 +1,15 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
+
+// Self-hosted to avoid the next/font/google metrics-lookup warning for the
+// merged "Big Shoulders" family. Variable file covers weights 600–700.
+const display = localFont({
+  src: "./fonts/big-shoulders.woff2",
+  weight: "600 700",
+  display: "swap",
+  variable: "--font-display",
+});
 
 export const metadata: Metadata = {
   title: "BLACKSITE // ops console",
@@ -25,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={display.variable}>
       <body>{children}</body>
     </html>
   );

@@ -35,9 +35,9 @@ export default function Dashboard() {
         <div className={s.pageTag}>SESSION // GHOST-14</div>
       </div>
 
-      <div className={`${s.grid} ${s.cols4}`} style={{ marginBottom: 18 }}>
+      <div className={`${s.statStrip} ticks`} style={{ marginBottom: 18 }}>
         {stats.map((st) => (
-          <div key={st.label} className={`${s.card} ticks`}>
+          <div key={st.label} className={s.statCell}>
             <div className={s.statLabel}>{st.label}</div>
             <div className={s.statBig}>
               {st.value}

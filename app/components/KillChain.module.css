@@ -67,7 +67,7 @@
 }
 
 .idx {
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.2em;
   color: var(--ink-faint);
 }
@@ -90,7 +90,7 @@
 }
 
 .status {
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   padding: 4px 10px;

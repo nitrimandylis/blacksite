@@ -26,9 +26,11 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 15px;
+  font-family: var(--display);
+  font-size: 19px;
   letter-spacing: 0.3em;
-  font-weight: 600;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .brandDot {
@@ -41,7 +43,7 @@
 
 .brandSub {
   margin-top: 8px;
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.24em;
   color: var(--ink-faint);
   text-transform: uppercase;
@@ -104,7 +106,7 @@
 .sideFoot {
   padding: 16px 20px;
   border-top: 1px solid var(--line);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.18em;
   color: var(--ink-faint);
   line-height: 1.9;
@@ -179,7 +181,7 @@
 
 .shortcutHint {
   margin-top: 8px;
-  font-size: 8px;
+  font-size: 9px;
   letter-spacing: 0.14em;
   color: var(--ink-faint);
   opacity: 0.6;
@@ -264,7 +266,7 @@
   justify-content: space-between;
   padding: 10px 14px;
   border-bottom: 1px solid var(--line);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
 }
