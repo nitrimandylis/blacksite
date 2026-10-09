@@ -21,6 +21,8 @@
 
 </div>
 
+[![blacksite: see the network, own the node. boot log on the left, live metrics on the right, every figure fabricated](.github/assets/screenshot.jpg)](https://blacksite-jet.vercel.app/)
+
 ---
 
 ## 🖤 What is this
