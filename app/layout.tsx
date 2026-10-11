@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   title: "BLACKSITE // ops console",
   description:
     "Monochrome intrusion operations console — network graphs, orbital target maps, live telemetry.",
-  metadataBase: new URL("https://blacksite.vercel.app"),
+  metadataBase: new URL("https://blacksite.nicktrim.com"),
   openGraph: {
     title: "BLACKSITE // ops console",
     description: "Monochrome intrusion operations console.",
